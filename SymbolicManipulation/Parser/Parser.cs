@@ -5,9 +5,6 @@ using System.Text;
 
 namespace SymbolicManipulation {
 	class Parser {
-		//TODO: Add more operators of higher precedence like ^. Abstract this whole system.
-		//TODO: Start implementing methods in general
-
 		List<ParseTree> numberStack = new List<ParseTree>();
 		List<ParseTree> operatorStack = new List<ParseTree>();
 

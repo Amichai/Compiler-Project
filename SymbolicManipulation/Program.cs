@@ -11,7 +11,7 @@ namespace SymbolicManipulation {
 			UserInterface UI = new UserInterface();
 
 			string input = //Console.ReadLine();
-				"5*3 + 4*-9 / 2 + 1";
+				"5/2*3 + 4*-9 / 2 + 1";
 			UI.Display("Program input: " + input);
 			double returnVal = new Tokenizer(input).Scan().parseTree.BuildParseTree().Evaluate();
 			UI.Display(returnVal.ToString());

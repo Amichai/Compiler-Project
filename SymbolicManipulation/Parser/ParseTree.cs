@@ -34,6 +34,7 @@ namespace SymbolicManipulation {
 		enum NodeType { number, function, numericalOperator }
 		static List<string> operatorPrecedence1 = new List<string>() { "+", "-" };
 		static List<string> operatorPrecedence2 = new List<string>() { "*", "/", "%" };
+		//TODO: Make this system more general and include "^"
 
 		internal double Evaluate() {
 			switch (function) {
@@ -50,9 +51,6 @@ namespace SymbolicManipulation {
 				default:
 					return NodeValue;
 			}
-
-
-			throw new NotImplementedException();
 		}
 	}
 }
