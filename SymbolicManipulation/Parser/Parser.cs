@@ -35,7 +35,7 @@ namespace SymbolicManipulation {
 						throw new Exception("Trying to append an operator twice!");
 					//operatorStack[num].children.Add(operatorStack[num - 1]);
 					operatorStack[num].children.Add(operatorStack[rootNode]);
-					rootNode++;
+					rootNode = num;
 				}
 				return defineOperator(num);
 			}
