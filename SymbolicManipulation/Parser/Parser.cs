@@ -44,7 +44,7 @@ namespace SymbolicManipulation {
 			else {
 				//determine precedence
 				//If current operator has precedence over next operator or they are equivalent
-				if (num + 1 == operatorStack.Count() || operatorStack[num].HasPrecedenceOver(operatorStack[num + 1])) {
+				if (num + 1 == operatorStack.Count() || operatorStack[rootNode].HasPrecedenceOver(operatorStack[num + 1])) {
 					operatorStack[num].children.Add(numberStack[num + 1]);
 					numberStack[num + 1].appendedToTree = true;
 					return operatorStack[num];
