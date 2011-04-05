@@ -20,5 +20,14 @@ namespace SymbolicManipulation {
 				Debug.Print(obj.ToString());
 			}
 		}
+		bool displayTokens = false;
+
+		internal void DisplayTokensLog() {
+			if(displayTokens){
+				foreach (object obj in objectLog) {
+					Debug.Print(obj.ToString());
+				}
+			}
+		}
 	}
 }

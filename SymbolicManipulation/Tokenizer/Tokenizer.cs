@@ -17,7 +17,7 @@ namespace SymbolicManipulation {
 			compilerInput = input; 
 		}
 
-		Tokens allTokens = new Tokens();
+		AllTokens allTokens = new AllTokens();
 
 		private class currentChar {
 			public char val { get; set; }
@@ -127,8 +127,7 @@ namespace SymbolicManipulation {
 
 		currentCharString tokenString = new currentCharString();
 
-		public Tokens Scan() {
-			//foreach (char c in compilerInput) {
+		public AllTokens Scan() {
 			for(int i = 0; i < compilerInput.Count(); i++){
 				char c = compilerInput[i];
 				Token tokenToAdd = tokenString.AddChar(new currentChar(c));
@@ -137,11 +136,10 @@ namespace SymbolicManipulation {
 					UI.AddToLog(tokenToAdd.TokenString + " " + tokenToAdd.TokenType.ToString());
 				}
 			}
-			//This publishes any content which would have been lost
+			//This publishes any content left over at the end of token creation
 			if (tokenString.tokenString.Count() > 0)
 				allTokens.Add(tokenString.Flush());
-			allTokens.parseTree.BuildParseTree();
-			UI.DisplayLog();
+			UI.DisplayTokensLog();
 			return allTokens;
 		}
 	}

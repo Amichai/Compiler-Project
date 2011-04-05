@@ -2,124 +2,71 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Diagnostics;
 
 namespace SymbolicManipulation {
 	class Parser {
-		Tokens tokens;
-		int tokenIndex = 0;
-		public Parser(Tokens tokens) {
-			this.tokens = tokens;
-		}
+		//TODO: Add more operators of higher precedence like ^. Abstract this whole system.
+		//TODO: Start implementing methods in general
 
-		private Expression setOperation(int value) {
-			MathOperation operation = new MathOperation(new IntStmnt(value));
-			tokenIndex++;
-			operation.SetOperation(tokens.results[tokenIndex].TokenString);
-			tokenIndex++;
-			operation.SetParameter2(this.ParseToken());
-			return new IntStmnt(operation.Evaluate());
-		}
+		List<ParseTree> numberStack = new List<ParseTree>();
+		List<ParseTree> operatorStack = new List<ParseTree>();
 
-		private Expression setAddMethod() {
-			AddMethod currentStatement = new AddMethod();
-			tokenIndex++;
-			while (tokenIndex < tokens.results.Count() - 1 && tokens.results[tokenIndex].TokenString != ")") {
-				tokenIndex++;
-				currentStatement.SetParameter(this.ParseToken());
+		public void AddToken(Token tokenToAdd) {
+			if (tokenToAdd.TokenType == TokenType.number) {
+				numberStack.Add(new ParseTree(tokenToAdd.TokenNumValue));
+			} else if (tokenToAdd.TokenType == TokenType.arithmeticOp) {
+				operatorStack.Add(new ParseTree(tokenToAdd.TokenString, 2));
+			} else if (tokenToAdd.TokenType == TokenType.function) {
+				//
 			}
-			currentStatement.Evaluate();
-			return currentStatement;
 		}
 
-		private Expression setIntStatement(int value) {
-			tokenIndex++;
-			return new IntStmnt(value);
-		}
-
-		public Expression ParseToken() {
-			Token currentToken = tokens.results[tokenIndex];
-			TokenType nextToken = TokenType.empty;
-			if(tokenIndex < tokens.results.Count())
-				nextToken= tokens.results[tokenIndex + 1].TokenType;
-			Expression statementToReturn = null;
-			switch (currentToken.TokenType) {
-				case TokenType.number:
-					if (nextToken == TokenType.arithmeticOp) {
-						statementToReturn = setOperation(currentToken.TokenNumValue);
-					} else {
-						statementToReturn = setIntStatement(currentToken.TokenNumValue);
-					}
-					break;
-				case TokenType.function:
-					//figure out where the method ends, test if the return will be part of another method
-					switch (currentToken.TokenString) {
-						case "Print":
-							break;
-						case "Add":
-							statementToReturn = setAddMethod();
-							if (tokenIndex < tokens.results.Count() - 1 && tokens.results[tokenIndex + 1].TokenType == TokenType.arithmeticOp) { }
-							break;
-						default:
-							throw new Exception("Method not recognized");
-					}
-					break;
-			}
-			if (statementToReturn == null)
-				throw new Exception("Null statement");
-			if (tokenIndex == tokens.results.Count() || tokens.results[tokenIndex].TokenType == TokenType.syntaxChar)
-				return statementToReturn;
-			else {
-				currentToken.TokenNumValue = statementToReturn.Value;
-				tokenIndex++;
-				ParseToken();
-			}
-			return null;
-		}
-
-		private Expression checkForNextOperation(int value) {
-			if (tokenIndex < tokens.results.Count() - 1 && tokens.results[tokenIndex + 1].TokenType == TokenType.arithmeticOp) {
-				return setOperation(value);
-			} else return null;
-		}
-
-		
-		HashSet<TokenType> expectation = new HashSet<TokenType>(){TokenType.function, TokenType.charString, TokenType.number, TokenType.syntaxChar};
-		/// <summary>
-		/// Check for input errors and build the parser tree
-		/// </summary>
-		public void TokenReview() {
-			//Enforce sequence rules
-			foreach (Token token in tokens.results) {
-				switch (token.TokenType) {
-					case TokenType.number:
-						if (!expectation.Contains(TokenType.number))
-							throw new Exception("Syntax error");
-						//Next token must be a arithmetic op
-						expectation = new HashSet<TokenType>(){TokenType.arithmeticOp, TokenType.function};
-						break;
-					case TokenType.arithmeticOp:
-						if (!expectation.Contains(TokenType.arithmeticOp))
-							throw new Exception("Syntax error");
-						expectation = new HashSet<TokenType>() {TokenType.number};
-						break;
-					case TokenType.charString:
-						if (!expectation.Contains(TokenType.charString))
-							throw new Exception("Syntax error");
-						expectation = new HashSet<TokenType>() { };
-						break;
-					case TokenType.empty:
-						break;
-					case TokenType.function:
-						break;
-					case TokenType.syntaxChar:
-						break;
-
+		private int rootNode = 0;
+		private ParseTree defineOperator(int num) {
+			//For first parameter, either take the corresponding number
+			//or the last defined operator
+			if (operatorStack[num].children.Count() == 0) {
+				if (!numberStack[num].appendedToTree) {
+					operatorStack[num].children.Add(numberStack[num]);
+					numberStack[num].appendedToTree = true;
+				} else {
+					//if (operatorStack[num - 1].appendedToTree)
+					if (operatorStack[rootNode].appendedToTree)
+						throw new Exception("Trying to append an operator twice!");
+					//operatorStack[num].children.Add(operatorStack[num - 1]);
+					operatorStack[num].children.Add(operatorStack[rootNode]);
+					rootNode++;
 				}
-
+				return defineOperator(num);
 			}
-			//Build a parse tree to be populated
 
+			//Not first operator parameter
+			else {
+				//determine precedence
+				//If current operator has precedence over next operator or they are equivalent
+				if (num + 1 == operatorStack.Count() || operatorStack[num].HasPrecedenceOver(operatorStack[num + 1])) {
+					operatorStack[num].children.Add(numberStack[num + 1]);
+					numberStack[num + 1].appendedToTree = true;
+					return operatorStack[num];
+				}
+				else {
+					i++;
+					ParseTree opToAdd = defineOperator(num + 1);
+					operatorStack[num].children.Add(opToAdd);
+					return operatorStack[num];
+				}
+			}
+			throw new Exception("not all code paths return a value");
+		}
+
+		private int i=0;
+		public ParseTree BuildParseTree() {
+			ParseTree ParserTree = null;
+			while (i < operatorStack.Count()) {
+				ParserTree = defineOperator(i);
+				i++;
+			}
+			return ParserTree;
 		}
 	}
 }
