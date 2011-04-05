@@ -11,7 +11,6 @@ namespace SymbolicManipulation {
 		public readonly static HashSet<char> arithmeticOperations = new HashSet<char>() { '/', '*', '%', '=' };
 		
 		string compilerInput = string.Empty;
-		private UserInterface UI = new UserInterface();
 
 		public Tokenizer(string input) {
 			compilerInput = input; 
@@ -133,13 +132,13 @@ namespace SymbolicManipulation {
 				Token tokenToAdd = tokenString.AddChar(new currentChar(c));
 				if (tokenToAdd != null) {
 					allTokens.Add(tokenToAdd);
-					UI.AddToLog(tokenToAdd.TokenString + " " + tokenToAdd.TokenType.ToString());
+					UserInterface.AddToLog(tokenToAdd.TokenString + " " + tokenToAdd.TokenType.ToString(), LogType.token);
 				}
 			}
 			//This publishes any content left over at the end of token creation
 			if (tokenString.tokenString.Count() > 0)
 				allTokens.Add(tokenString.Flush());
-			UI.DisplayTokensLog();
+			UserInterface.DisplayLog(LogType.token);
 			return allTokens;
 		}
 	}

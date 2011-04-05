@@ -5,28 +5,35 @@ using System.Text;
 using System.Diagnostics;
 
 namespace SymbolicManipulation {
-	class UserInterface {
-		List<string> objectLog = new List<string>();
-		public void AddToLog(string obj){
-			objectLog.Add(obj);
+	public enum LogType { input, output, token, parseTree, all }
+	static class UserInterface {
+		static List<Tuple<string, LogType>> objectLog = new List<Tuple<string, LogType>>();
+		static bool displayTokens = true;
+		static bool displayInput = true;
+		static bool displayOutput = true;
+
+		public static string AddToLog(this string obj, LogType type){
+			objectLog.Add(new Tuple<string, LogType>(type.ToString() + ": " + obj.ToString(), type));
+			return obj;
 		}
 
-		public void Display(string textToDisplay) {
+		public static double AddToLog(this double obj, LogType type) {
+			objectLog.Add(new Tuple<string, LogType>(type.ToString() + ": " + obj.ToString(), type));
+			return obj;
+		}
+
+		public static void Display(string textToDisplay) {
 			Debug.Print(textToDisplay);
 		}
 
-		public void DisplayLog() {
-			foreach(object obj in objectLog){
-				Debug.Print(obj.ToString());
-			}
-		}
-		bool displayTokens = false;
-
-		internal void DisplayTokensLog() {
-			if(displayTokens){
-				foreach (object obj in objectLog) {
-					Debug.Print(obj.ToString());
-				}
+		public static void DisplayLog(LogType logType) {
+			foreach(Tuple<string, LogType> obj in objectLog){
+				if(obj.Item2 == logType 
+					//Check that we've selected to display this part of the log (from within this class)
+					&& (!(obj.Item2 == LogType.token) || displayTokens)
+					&& (!(obj.Item2 == LogType.input) || displayInput)
+					&& (!(obj.Item2 == LogType.output) || displayOutput))
+					Debug.Print(obj.Item1);
 			}
 		}
 	}
