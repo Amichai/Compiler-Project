@@ -8,16 +8,15 @@ using System.Diagnostics;
 namespace SymbolicManipulation {
 	class Program {
 		static void Main(string[] args) {
-			string input = //Console.ReadLine();
-				"5/2*3 + 4*-9 / 2 + 1".AddToLog(LogType.input);
-
-			UserInterface.DisplayLog(LogType.input);
-			double returnVal = new Tokenizer(input)
-									.Scan()
-									.parseTree.BuildParseTree()
-									.Evaluate().AddToLog(LogType.output);
-			UserInterface.DisplayLog(LogType.output);
-			//TODO: Add every data structure possible to the log
+			string input =
+				"5/2*3 + 4*-9 / 2 + 1"	.AddToLog(LogType.input);
+										UI.DisplayLog(LogType.input);
+			new Tokenizer(input)
+					.Scan()
+					.parseTree.BuildParseTree()
+					.Evaluate()			.AddToLog(LogType.output);
+										UI.DisplayLog(LogType.output);
+			//TODO: Add every data structure to the log
 		}
 	}
 }

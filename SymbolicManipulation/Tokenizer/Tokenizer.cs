@@ -132,13 +132,13 @@ namespace SymbolicManipulation {
 				Token tokenToAdd = tokenString.AddChar(new currentChar(c));
 				if (tokenToAdd != null) {
 					allTokens.Add(tokenToAdd);
-					UserInterface.AddToLog(tokenToAdd.TokenString + " " + tokenToAdd.TokenType.ToString(), LogType.token);
+					UI.AddToLog(tokenToAdd.TokenString + " " + tokenToAdd.TokenType.ToString(), LogType.token);
 				}
 			}
 			//This publishes any content left over at the end of token creation
 			if (tokenString.tokenString.Count() > 0)
 				allTokens.Add(tokenString.Flush());
-			UserInterface.DisplayLog(LogType.token);
+			UI.DisplayLog(LogType.token);
 			return allTokens;
 		}
 	}

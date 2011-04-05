@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace SymbolicManipulation {
 	public enum LogType { input, output, token, parseTree, all }
-	static class UserInterface {
+	static class UI {
 		static List<Tuple<string, LogType>> objectLog = new List<Tuple<string, LogType>>();
 		static bool displayTokens = true;
 		static bool displayInput = true;
