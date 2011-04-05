@@ -9,7 +9,7 @@ namespace SymbolicManipulation {
 		public Parser parseTree = new Parser();
 		public void Add(Token token) {
 			parseTree.AddToken(token);
-			allTokenStrings += token.TokenString + " ";
+			allTokenStrings += token.TokenType.ToString() + ": " + token.TokenString + " \n";
 			if (token.TokenType == TokenType.openBrace)
 				openBracketCount++;
 			if (token.TokenType == TokenType.closedBrace)
@@ -17,6 +17,11 @@ namespace SymbolicManipulation {
 		}
 		
 		//TODO: Implemented a bracket order of operations system
+		//TODO: Implement word functions like Add(1,2,3);
 		public int openBracketCount = 0;
+
+		public string Visualize() {
+			return allTokenStrings;
+		}
 	}
 }

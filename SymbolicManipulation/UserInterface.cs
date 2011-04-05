@@ -5,20 +5,34 @@ using System.Text;
 using System.Diagnostics;
 
 namespace SymbolicManipulation {
-	public enum LogType { input, output, token, parseTree, all }
+	public enum LogType { input, output, token, parseTree, all, allTokens }
 	static class UI {
-		static List<Tuple<string, LogType>> objectLog = new List<Tuple<string, LogType>>();
-		static bool displayTokens = true;
-		static bool displayInput = true;
-		static bool displayOutput = true;
+		static List<Tuple<object, LogType>> objectLog = new List<Tuple<object, LogType>>();
+
+		//UI Display Settings:
+		static bool displayEachToken	= false;
+		static bool displayAllTokens	= true;
+		static bool displayInput		= true;
+		static bool displayOutput		= true;
+		static bool displayParseTree	= true;
 
 		public static string AddToLog(this string obj, LogType type){
-			objectLog.Add(new Tuple<string, LogType>(type.ToString() + ": " + obj.ToString(), type));
+			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.ToString(), type));
 			return obj;
 		}
 
 		public static double AddToLog(this double obj, LogType type) {
-			objectLog.Add(new Tuple<string, LogType>(type.ToString() + ": " + obj.ToString(), type));
+			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.ToString(), type));
+			return obj;
+		}
+
+		public static ParseTree AddToLog(this ParseTree obj, LogType type) {
+			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.Visualize(), type));
+			return obj;
+		}
+
+		public static AllTokens AddToLog(this AllTokens obj, LogType type) {
+			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.Visualize(), type));
 			return obj;
 		}
 
@@ -27,13 +41,15 @@ namespace SymbolicManipulation {
 		}
 
 		public static void DisplayLog(LogType logType) {
-			foreach(Tuple<string, LogType> obj in objectLog){
+			foreach(Tuple<object, LogType> obj in objectLog){
 				if(obj.Item2 == logType 
 					//Check that we've selected to display this part of the log (from within this class)
-					&& (!(obj.Item2 == LogType.token) || displayTokens)
+					&& (!(obj.Item2 == LogType.token) || displayEachToken)
 					&& (!(obj.Item2 == LogType.input) || displayInput)
-					&& (!(obj.Item2 == LogType.output) || displayOutput))
-					Debug.Print(obj.Item1);
+					&& (!(obj.Item2 == LogType.output) || displayOutput)
+					&& (!(obj.Item2 == LogType.parseTree) || displayParseTree)
+					&& (!(obj.Item2 == LogType.allTokens) || displayAllTokens))
+					Debug.Print(obj.Item1.ToString());
 			}
 		}
 	}

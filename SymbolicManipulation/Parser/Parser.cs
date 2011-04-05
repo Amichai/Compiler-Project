@@ -14,7 +14,9 @@ namespace SymbolicManipulation {
 			} else if (tokenToAdd.TokenType == TokenType.arithmeticOp) {
 				operatorStack.Add(new ParseTree(tokenToAdd.TokenString, 2));
 			} else if (tokenToAdd.TokenType == TokenType.function) {
-				//
+				operatorStack.Add(new ParseTree(tokenToAdd.TokenString, 1));
+			} else if (tokenToAdd.TokenString == "(") {
+				
 			}
 		}
 
@@ -27,16 +29,13 @@ namespace SymbolicManipulation {
 					operatorStack[num].children.Add(numberStack[num]);
 					numberStack[num].appendedToTree = true;
 				} else {
-					//if (operatorStack[num - 1].appendedToTree)
 					if (operatorStack[rootNode].appendedToTree)
 						throw new Exception("Trying to append an operator twice!");
-					//operatorStack[num].children.Add(operatorStack[num - 1]);
 					operatorStack[num].children.Add(operatorStack[rootNode]);
 					rootNode = num;
 				}
 				return defineOperator(num);
 			}
-
 			//Not first operator parameter
 			else {
 				//determine precedence

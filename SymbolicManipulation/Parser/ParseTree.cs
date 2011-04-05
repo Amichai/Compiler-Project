@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System;	
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,7 +36,7 @@ namespace SymbolicManipulation {
 		static List<string> operatorPrecedence2 = new List<string>() { "*", "/", "%" };
 		//TODO: Make this system more general and include "^"
 
-		internal double Evaluate() {
+		public double Evaluate() {
 			switch (function) {
 				case "+":
 					return children[0].Evaluate() + children[1].Evaluate();
@@ -51,6 +51,19 @@ namespace SymbolicManipulation {
 				default:
 					return NodeValue;
 			}
+		}
+
+		public string Visualize(){
+			string visualization = string.Empty;
+
+			visualization += function;
+			if(function == string.Empty)
+				visualization += NodeValue;
+			visualization += " ";
+			foreach (ParseTree child in children) {
+				visualization += child.Visualize();
+			}
+			return visualization;
 		}
 	}
 }

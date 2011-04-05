@@ -10,13 +10,16 @@ namespace SymbolicManipulation {
 		static void Main(string[] args) {
 			string input =
 				"5/2*3 + 4*-9 / 2 + 1"	.AddToLog(LogType.input);
-										UI.DisplayLog(LogType.input);
+			
 			new Tokenizer(input)
-					.Scan()
-					.parseTree.BuildParseTree()
-					.Evaluate()			.AddToLog(LogType.output);
+					.Scan()						.AddToLog(LogType.allTokens)
+					.parseTree.BuildParseTree()	.AddToLog(LogType.parseTree)
+					.Evaluate()					.AddToLog(LogType.output);
+										
+										UI.DisplayLog(LogType.input);
+										UI.DisplayLog(LogType.parseTree);
+										UI.DisplayLog(LogType.allTokens);
 										UI.DisplayLog(LogType.output);
-			//TODO: Add every data structure to the log
 		}
 	}
 }
