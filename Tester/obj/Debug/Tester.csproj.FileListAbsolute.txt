@@ -1,0 +1,9 @@
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\bin\Debug\Tester.dll
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\bin\Debug\Tester.pdb
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\bin\Debug\SymbolicManipulation.exe
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\bin\Debug\SymbolicManipulation.pdb
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\bin\Debug\SymbolicManipulation_Accessor.exe
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\bin\Debug\SymbolicManipulation_Accessor.pdb
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\obj\Debug\Tester.dll
+C:\Users\Amichai\documents\visual studio 2010\Projects\SymbolicManipulation\Tester\obj\Debug\Tester.pdb
