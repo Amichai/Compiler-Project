@@ -1,0 +1,5 @@
+c:\users\amichai\documents\visual studio 2010\Projects\SymbolicManipulation\SymbolicManipulation\bin\Debug\SymbolicManipulation.exe
+c:\users\amichai\documents\visual studio 2010\Projects\SymbolicManipulation\SymbolicManipulation\bin\Debug\SymbolicManipulation.pdb
+c:\users\amichai\documents\visual studio 2010\Projects\SymbolicManipulation\SymbolicManipulation\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\amichai\documents\visual studio 2010\Projects\SymbolicManipulation\SymbolicManipulation\obj\x86\Debug\SymbolicManipulation.exe
+c:\users\amichai\documents\visual studio 2010\Projects\SymbolicManipulation\SymbolicManipulation\obj\x86\Debug\SymbolicManipulation.pdb
