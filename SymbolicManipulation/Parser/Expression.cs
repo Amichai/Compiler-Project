@@ -38,6 +38,8 @@ namespace SymbolicManipulation {
 				//determine precedence
 				//If current operator has precedence over next operator or they are equivalent
 				if (num + 1 == OperatorStack.Count() || OperatorStack[rootNode].HasPrecedenceOver(OperatorStack[num + 1])) {
+					//"rootNode" is the source of the bug
+					//Consider inserting parenthesis all around
 					OperatorStack[num].Children.Add(NumberStack[num + 1]);
 					NumberStack[num + 1].appendedToTree = true;
 					return OperatorStack[num];
@@ -58,7 +60,8 @@ namespace SymbolicManipulation {
 				ParserTree = defineOperator(i);
 				i++;
 			}
-			ParserTree.EvaluationValue = ParserTree.Evaluate();
+			if(ParserTree != null)
+				ParserTree.EvaluationValue = ParserTree.Evaluate();
 			return ParserTree;
 		}
 	}
@@ -118,7 +121,11 @@ namespace SymbolicManipulation {
 			int op2Value = getOperatorValue(testFunction.operationType);
 			if (op1Value < op2Value)
 				return false;
-			else return true;
+			if (op1Value > op2Value)
+				return true;
+			if(op1Value == op2Value)
+				return true;
+			throw new Exception("UNhandled");
 		}
 	}
 
