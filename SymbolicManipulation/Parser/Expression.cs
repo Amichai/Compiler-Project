@@ -6,14 +6,10 @@ using System.Text;
 namespace SymbolicManipulation {
 	public class Expression {
 		public Expression() {
-			ExpressionIdNum = counter;
-			counter++;
 		}
 		public static int counter = 0;
-		public int ExpressionIdNum;
 		public List<Expression> Children = new List<Expression>();
 		public double EvaluationValue = double.MinValue;
-		public int numberOfChildren = int.MaxValue;
 		public bool appendedToTree = false;
 
 		public List<Number> NumberStack = new List<Number>();
@@ -70,8 +66,6 @@ namespace SymbolicManipulation {
 	public class Number : Expression {
 		public Number(double num) {
 			EvaluationValue = num;
-			ExpressionIdNum = counter;
-			counter++;
 		}
 		public override double Evaluate() {
 			return EvaluationValue;
@@ -81,8 +75,6 @@ namespace SymbolicManipulation {
 	public class Operation : Expression {
 		public string operationType;
 		public Operation(string c) {
-			ExpressionIdNum = counter;
-			counter++;
 			operationType = c;
 		}
 
@@ -132,8 +124,6 @@ namespace SymbolicManipulation {
 
 	public class Function : Expression {
 		public Function(string functionName) {
-			ExpressionIdNum = counter;
-			counter++;
 		}
 	}
 

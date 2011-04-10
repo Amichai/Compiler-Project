@@ -9,8 +9,14 @@ namespace SymbolicManipulation {
 	class Program {
 		static void Main(string[] args) {
 			string input =
-			//	"5/2*3 + 4*-9 / 2 + 1"	.AddToLog(LogType.input);
-			"5 + 3*2 / (5 - 1) - 2*-7 + (3 - 2 * -5) + -1".AddToLog(LogType.input);
+			"5 + 3/2 / (5 - 1) - 2/-7 + (3 - 2 / -5) + -1"	.AddToLog(LogType.input);
+
+			//TODO: Teach the tokenizer to handle "^"
+			//TODO: BUG:
+			//   "5 + 3/2 / (5 - 1) - 2/-7 + (3 - 2 / -5) + -1"
+			// is being read as:
+			//	"5 + 3/(2 / (5 - 1)) - 2/-7 + (3 - 2 / -5) + -1"
+			// I don't know why
 
 			new Tokenizer(input)
 					.Scan().AddToLog(LogType.allTokens)

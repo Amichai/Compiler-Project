@@ -39,7 +39,6 @@ namespace SymbolicManipulation {
 			}
 		}
 		//TODO: Incorperate polymorphism into the token definition
-		private static int counter = 0;
 
 		internal double Evaluate() {
 			double evaluation = rootExpression.BuildParseTree().EvaluationValue;
