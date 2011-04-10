@@ -8,6 +8,10 @@ namespace SymbolicManipulation {
 		List<ParseTree> numberStack = new List<ParseTree>();
 		List<ParseTree> operatorStack = new List<ParseTree>();
 
+		//Last parser is the current parser
+		List<Parser> parserStack = new List<Parser>();
+
+		//TODO: Make this whole thing more functional
 		public void AddToken(Token tokenToAdd) {
 			if (tokenToAdd.TokenType == TokenType.number) {
 				numberStack.Add(new ParseTree(tokenToAdd.TokenNumValue));
@@ -16,7 +20,11 @@ namespace SymbolicManipulation {
 			} else if (tokenToAdd.TokenType == TokenType.function) {
 				operatorStack.Add(new ParseTree(tokenToAdd.TokenString, 1));
 			} else if (tokenToAdd.TokenString == "(") {
-				
+				//Add a new parser to the parser stack
+				//Initialize a sub parser
+				//Log the existance of this parser in system state
+				//take all subsequent tokens and pass them to the current parser
+				//When the parenthesis is close, 
 			}
 		}
 
@@ -24,7 +32,7 @@ namespace SymbolicManipulation {
 		private ParseTree defineOperator(int num) {
 			//For first parameter, either take the corresponding number
 			//or the last defined operator
-			if (operatorStack[num].children.Count() == 0) {
+			if (operatorStack[num].children.Count() == 0) {    
 				if (!numberStack[num].appendedToTree) {
 					operatorStack[num].children.Add(numberStack[num]);
 					numberStack[num].appendedToTree = true;
@@ -63,6 +71,181 @@ namespace SymbolicManipulation {
 				i++;
 			}
 			return ParserTree;
+		}
+	}
+
+	class Parser2 {
+		Expression rootExpression = new Expression();
+		private static int openBraceCounter = 0;
+		public void AddToken(Token token) {
+			switch (token.TokenType) {
+				case TokenType.arithmeticOp:
+					if (rootExpression.ExpressionStack.Count() > 0)
+						rootExpression.ExpressionStack.Last().OperatorStack.Add(new Operation(token.TokenString));
+					else
+						rootExpression.OperatorStack.Add(new Operation(token.TokenString));
+					break;
+				case TokenType.number:
+					if(rootExpression.ExpressionStack.Count() > 0)
+						rootExpression.ExpressionStack.Last().NumberStack.Add(new Number(token.TokenNumValue));
+					else
+						rootExpression.NumberStack.Add(new Number(token.TokenNumValue));
+					break;
+				case TokenType.function:
+					break;
+				case TokenType.openBrace:
+					openBraceCounter++;
+					rootExpression.ExpressionStack.Add(new Expression());
+					break;
+				case TokenType.closedBrace:
+					double evaluationValue = rootExpression.ExpressionStack.Last().BuildParseTree().EvaluationValue;
+					rootExpression.ExpressionStack.RemoveAt(openBraceCounter-1);
+					if (rootExpression.ExpressionStack.Count() > 0)
+						rootExpression.ExpressionStack.Last().NumberStack.Add(new Number(evaluationValue));
+					else
+						rootExpression.NumberStack.Add(new Number(evaluationValue));
+					openBraceCounter--;
+					break;
+			}
+		}
+		//TODO: Incorperate polymorphism into the token definition
+		private static int counter = 0;
+		private class Expression {
+			public Expression(){
+				ExpressionIdNum = counter;
+				counter++;
+			}
+
+			public int ExpressionIdNum;
+			public List<Expression> Children = new List<Expression>();
+			public double EvaluationValue = double.MinValue;
+			public int numberOfChildren = int.MaxValue;
+			public bool appendedToTree = false;
+
+			public List<Number> NumberStack = new List<Number>();
+			public List<Operation> OperatorStack = new List<Operation>();
+			public List<Expression> ExpressionStack = new List<Expression>();
+
+			public virtual double Evaluate() { return int.MinValue;  }
+			private int rootNode = 0;
+			private Operation defineOperator(int num) {
+				//For first parameter, either take the corresponding number
+				//or the last defined operator
+				if (OperatorStack[num].Children.Count() == 0) {
+					if (!NumberStack[num].appendedToTree) {
+						OperatorStack[num].Children.Add(NumberStack[num]);
+						NumberStack[num].appendedToTree = true;
+					} else {
+						if (OperatorStack[rootNode].appendedToTree)
+							throw new Exception("Trying to append an operator twice!");
+						OperatorStack[num].Children.Add(OperatorStack[rootNode]);
+						rootNode = num;
+					}
+					return defineOperator(num);
+				}
+					//Not first operator parameter
+				else {
+					//determine precedence
+					//If current operator has precedence over next operator or they are equivalent
+					if (num + 1 == OperatorStack.Count() || OperatorStack[rootNode].HasPrecedenceOver(OperatorStack[num + 1])) {
+						OperatorStack[num].Children.Add(NumberStack[num + 1]);
+						NumberStack[num + 1].appendedToTree = true;
+						return OperatorStack[num];
+					} else {
+						i++;
+						Expression opToAdd = defineOperator(num + 1);
+						OperatorStack[num].Children.Add(opToAdd);
+						return OperatorStack[num];
+					}
+				}
+				throw new Exception("not all code paths return a value");
+			}
+
+			private int i = 0;
+			public Expression BuildParseTree() {
+			Operation ParserTree = null;
+				while (i <  OperatorStack.Count()) {
+					ParserTree = defineOperator(i);
+					i++;
+				}
+				ParserTree.EvaluationValue = ParserTree.Evaluate();
+				return ParserTree;
+			}
+		}
+
+		private class Number : Expression {
+			public Number(double num) {
+				EvaluationValue = num;
+				ExpressionIdNum = counter;
+				counter++;
+			}
+			public override double Evaluate() {
+				return EvaluationValue;
+			}
+		}
+
+		private class Operation : Expression{
+			public string operationType;
+			public Operation(string c) {
+				ExpressionIdNum = counter;
+				counter++;
+				operationType = c;
+			}
+
+			public override double Evaluate() {
+				switch (operationType) {
+					case "+":
+						return Children[0].Evaluate() + Children[1].Evaluate();
+					case "-":
+						return Children[0].Evaluate() - Children[1].Evaluate();
+					case "*":
+						return Children[0].Evaluate() * Children[1].Evaluate();
+					case "/":
+						return Children[0].Evaluate() / Children[1].Evaluate();
+					case "%":
+						return Children[0].Evaluate() % Children[1].Evaluate();
+					default:
+						throw new Exception("unknown operator");
+				}
+			}
+
+			private int getOperatorValue(string op) {
+				int opValue = int.MinValue;
+				if (op == "+" ||
+					op == "-") {
+						opValue = 1;
+				}
+				if (op == "*" ||
+					op == "/") {
+						opValue = 2;
+				}
+				if (op == "^") {
+					opValue = 3;
+				}
+				if (opValue == int.MinValue)
+					throw new Exception("Unable to evaluate operator value");
+				return opValue;
+			}
+
+			public bool HasPrecedenceOver(Operation testFunction) {
+				int op1Value = getOperatorValue(this.operationType);
+				int op2Value = getOperatorValue(testFunction.operationType);
+				if (op1Value < op2Value)
+					return false;
+				else return true;
+			}
+		}
+
+		private class Function : Expression {
+			public Function(string functionName) {
+				ExpressionIdNum = counter;
+				counter++;
+			}
+		}
+
+		internal double Evaluate() {
+			double evaluation = rootExpression.BuildParseTree().EvaluationValue;
+			return evaluation;
 		}
 	}
 }
