@@ -6,7 +6,7 @@ using System.Text;
 namespace SymbolicManipulation {
 	class AllTokens {
 		string allTokenStrings = string.Empty;
-		public Parser2 parseTree = new Parser2();
+		public Parser parseTree = new Parser();
 		public void Add(Token token) {
 			parseTree.AddToken(token);
 			allTokenStrings += token.TokenType.ToString() + ": " + token.TokenString + " \n";
@@ -17,7 +17,7 @@ namespace SymbolicManipulation {
 		}
 		
 		
-		//TODO: Implemented a bracket order of operations system
+		//TODO: Allow for negated numbers with a space like: "- 3"
 		//TODO: Implement word functions like Add(1,2,3);
 		public int openBracketCount = 0;
 

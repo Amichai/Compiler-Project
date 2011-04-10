@@ -14,7 +14,6 @@ namespace SymbolicManipulation {
 		static bool displayAllTokens	= true;
 		static bool displayInput		= true;
 		static bool displayOutput		= true;
-		static bool displayParseTree	= true;
 
 		public static string AddToLog(this string obj, LogType type){
 			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.ToString(), type));
@@ -23,11 +22,6 @@ namespace SymbolicManipulation {
 
 		public static double AddToLog(this double obj, LogType type) {
 			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.ToString(), type));
-			return obj;
-		}
-
-		public static ParseTree AddToLog(this ParseTree obj, LogType type) {
-			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.Visualize(), type));
 			return obj;
 		}
 
@@ -47,7 +41,6 @@ namespace SymbolicManipulation {
 					&& (!(obj.Item2 == LogType.token) || displayEachToken)
 					&& (!(obj.Item2 == LogType.input) || displayInput)
 					&& (!(obj.Item2 == LogType.output) || displayOutput)
-					&& (!(obj.Item2 == LogType.parseTree) || displayParseTree)
 					&& (!(obj.Item2 == LogType.allTokens) || displayAllTokens))
 					Debug.Print(obj.Item1.ToString());
 			}
