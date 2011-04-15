@@ -5,7 +5,7 @@ using System.Text;
 using System.Diagnostics;
 
 namespace SymbolicManipulation {
-	public enum LogType { input, output, token, parseTree, all, allTokens }
+	public enum LogType { input, output, token, parseTree, all, allTokens, postFixedTokens }
 	static class UI {
 		static List<Tuple<object, LogType>> objectLog = new List<Tuple<object, LogType>>();
 
@@ -26,6 +26,11 @@ namespace SymbolicManipulation {
 		}
 
 		public static AllTokens AddToLog(this AllTokens obj, LogType type) {
+			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.Visualize(), type));
+			return obj;
+		}
+
+		public static PostFixedTokens AddToLog(this PostFixedTokens obj, LogType type) {
 			objectLog.Add(new Tuple<object, LogType>(type.ToString().ToUpper() + ": " + obj.Visualize(), type));
 			return obj;
 		}

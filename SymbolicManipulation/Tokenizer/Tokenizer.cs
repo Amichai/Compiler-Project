@@ -125,7 +125,6 @@ namespace SymbolicManipulation {
 		}
 
 		currentCharString tokenString = new currentCharString();
-
 		public AllTokens Scan() {
 			for(int i = 0; i < compilerInput.Count(); i++){
 				char c = compilerInput[i];

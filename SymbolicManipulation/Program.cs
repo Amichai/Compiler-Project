@@ -8,34 +8,12 @@ using System.Diagnostics;
 namespace SymbolicManipulation {
 	class Program {
 		static void Main(string[] args) {
-			string input = "5 + ((1 + 2*2*3 / 14) * 4^2) - 3 * 2";
-			//"5 + 3/(2 / ((4 - 1) * 2))"	.AddToLog(LogType.input);
+			string input = "5(3+1)1";
 
-			//input = AddParenthesis(input);
-			//Debug.Print(input);
-
-			//TODO: Teach the tokenizer to handle "^"
-			//TODO: BUG:
-			//   "5 + 3/2 / (5 - 1) - 2/-7 + (3 - 2 / -5) + -1"
-			// is being read as:
-			//	"5 + 3/(2 / (5 - 1)) - 2/-7 + (3 - 2 / -5) + -1"
-			// I don't know why
-
-			new Tokenizer(input).Scan()
-							.ConvertToPostfix()		.AddToLog(LogType.allTokens)
+			new Tokenizer(input).Scan()				.AddToLog(LogType.allTokens)
+							.ConvertToPostfix()		.AddToLog(LogType.postFixedTokens)
 							.Evaluate()				.AddToLog(LogType.output);
 
-			/*
-			new Tokenizer(input)
-					.Scan().AddToLog(LogType.allTokens)
-					.parseTree
-					.Evaluate().AddToLog(LogType.output);
-										
-										UI.DisplayLog(LogType.input);
-										UI.DisplayLog(LogType.parseTree);
-										UI.DisplayLog(LogType.allTokens);
-										UI.DisplayLog(LogType.output);
-			 */
 			UI.DisplayLog(LogType.allTokens);
 			UI.DisplayLog(LogType.output);
 		}
