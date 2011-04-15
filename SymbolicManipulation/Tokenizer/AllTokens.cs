@@ -5,24 +5,56 @@ using System.Text;
 
 namespace SymbolicManipulation {
 	class AllTokens {
+		//TODO: Refactor this class a bit
 		string allTokenStrings = string.Empty;
 		List<Token> tokens = new List<Token>();
 
-		//TODO: Remove parse tree in favor of the postfix notation
-		public Parser parseTree = new Parser();
 		public void Add(Token token) {
-			parseTree.AddToken(token);
 			tokens.Add(token);
 			allTokenStrings += token.TokenType.ToString() + ": " + token.TokenString + " \n";
 		}
-		////
 
 		public AllTokens ConvertToPostfix() {
 			return new ConvertToPostfix(tokens).postFixedTokens;
 		}
-		//Refactor this mess
+
+		Stack<double> evalStack = new Stack<double>();
 		public double Evaluate() {
-			return 0;
+			foreach (Token token in tokens) {
+				if (token.TokenType == TokenType.number) {
+					evalStack.Push(token.TokenNumValue);
+				}
+				if(token.TokenType == TokenType.arithmeticOp){
+					switch (token.TokenString) {
+						case "+":
+							evalStack.Push(evalStack.Pop() + evalStack.Pop());
+							break;
+						case "-":
+							evalStack.Push(-evalStack.Pop() + evalStack.Pop());
+							break;
+						case "*":
+							evalStack.Push(evalStack.Pop() * evalStack.Pop());
+							break;
+						case "/":
+							double val1 = evalStack.Pop();
+							double val2 = evalStack.Pop();
+							evalStack.Push(val2 / val1);
+							break;
+						case "%":
+							evalStack.Push(evalStack.Pop() % evalStack.Pop());
+							break;
+						case "^":
+							evalStack.Push(Math.Pow(evalStack.Pop(), evalStack.Pop()));
+							break;
+						default:
+							throw new Exception("unknown operator");
+					}
+				}
+			}
+
+			if (evalStack.Count() != 1)
+				throw new Exception("Parser evaluation error");
+			return evalStack.Pop();
 		}
 		
 		//TODO: Allow for negated numbers with a space like: "- 3"
@@ -35,13 +67,13 @@ namespace SymbolicManipulation {
 
 	class ConvertToPostfix {
 		public AllTokens postFixedTokens = new AllTokens();
-		private TokenType lastTokenType = TokenType.empty;
 
 		private void handleOperator(Token token) {
 			//Test precedence
 			//If the current op has higher precedence, add to the stack
 			//true if the last operator on the stack has precedence over the current operator
-			while (operatorStack.Count() > 0 && precedenceTest(operatorStack.First().TokenString, token.TokenString)) {
+			while (operatorStack.Count() > 0 && operatorStack.First().TokenType == TokenType.arithmeticOp 
+				&& precedenceTest(operatorStack.First().TokenString, token.TokenString)) {
 				postFixedTokens.Add(operatorStack.Pop());
 			}
 			operatorStack.Push(token);
@@ -50,13 +82,8 @@ namespace SymbolicManipulation {
 		Stack<Token> operatorStack = new Stack<Token>();
 		public ConvertToPostfix(List<Token> tokens) {
 			foreach (Token token in tokens) {
-
 				if (token.TokenType == TokenType.number) {
-					if (lastTokenType == TokenType.number) {
-						handleOperator(new Token("+", TokenType.arithmeticOp));
-					}
 					postFixedTokens.Add(token);
-					lastTokenType = TokenType.number;
 				}
 				if (token.TokenType == TokenType.function) {
 					operatorStack.Push(token);
@@ -67,7 +94,6 @@ namespace SymbolicManipulation {
 				}
 				if (token.TokenType == TokenType.arithmeticOp) {
 					handleOperator(token);
-					lastTokenType = TokenType.arithmeticOp;
 				}
 				if (token.TokenType == TokenType.openBrace) {
 					operatorStack.Push(token);
