@@ -8,7 +8,7 @@ namespace SymbolicManipulation {
 	enum CharType { number, letter, arithmeticOp, syntaxChar, plusOrMinusSign, brace, whitespace }
 	class Tokenizer {
 		public readonly static HashSet<char> syntaxChars = new HashSet<char>() { ',', '.', '{', '}' };
-		public readonly static HashSet<char> arithmeticOperations = new HashSet<char>() { '/', '*', '%', '=' };
+		public readonly static HashSet<char> arithmeticOperations = new HashSet<char>() { '/', '*', '^', '%', '=' };
 		
 		string compilerInput = string.Empty;
 
